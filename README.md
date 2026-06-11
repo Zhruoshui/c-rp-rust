@@ -32,6 +32,3 @@ mdbook serve --open
 - 代码示例及 Cargo 项目：[MIT License](./LICENSE-MIT) 和 [Apache License v2.0](./LICENSE-APACHE)
 - 文字内容：[CC-BY-SA v4.0](./LICENSE-CC-BY-SA)
 
-### Disclaimer
-
-The experiments and projects shared in this book have worked for me, but results may vary. I'm not responsible for any issues or damage that may occur while you're experimenting. Please proceed with caution and take necessary safety precautions.

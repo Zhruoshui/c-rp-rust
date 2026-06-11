@@ -10,13 +10,17 @@
     </p>
     <p style="opacity: 0.9; margin-bottom: 20px; font-size: 1em;">如果你在阅读过程中发现任何问题，欢迎通过以下方式反馈：</p>
     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-        <a href="https://github.com/Zhruoshui/pico-pico-zh" target="_blank" style="text-decoration: none;">
+        <a href="https://github.com/Zhruoshui/c-rp-rust" target="_blank" style="text-decoration: none;">
             <img src="https://img.shields.io/badge/GitHub-Report_Issue-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Issues">
         </a>
         <a href="mailto:Aruoshui_Zh@outlook.com" style="text-decoration: none;">
             <img src="https://img.shields.io/badge/Email-Contact_Me-D14836?style=for-the-badge&logo=microsoftoutlook&logoColor=white" alt="Email">
         </a>
     </div>
+</div>
+
+<div align="center">
+    <img src="https://image.aruoshui.fun/i/2024/12/31/vkaiy2-0.webp" alt="菲伦保命" style="max-width: 280px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 2px solid rgba(230, 126, 34, 0.2);">
 </div>
 
 ## 为什么 C + Rust 双轨？
