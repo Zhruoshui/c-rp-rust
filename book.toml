@@ -1,13 +1,13 @@
 [book]
-title = "impl Rust for RP2350"
-description = "Learn embedded Rust programming on Raspberry Pi Pico 2 (RP2350) with hands-on examples like GPIO, PWM, and peripherals."
-authors = ["ImplFerris"]
+title = "impl Rust & C for RP2350"
+description = "Learn embedded programming on Raspberry Pi Pico 2 (RP2350) with hands-on examples in both C (Pico SDK) and Rust. Covers GPIO, PWM, I2C, SPI, and more."
+authors = ["ImplFerris", "Zhruoshui"]
 language = "en"
 src = "src"
 
 [output.html]
-git-repository-url = "https://github.com/ImplFerris/pico-pico"
-cname = "pico.implrust.com"
+git-repository-url = "https://github.com/Zhruoshui/c-rp-rust"
+cname = "rp2350.aruoshui.com"
 preferred-dark-theme = "ayu"
 default-theme = "light"
 mathjax-support = true
