@@ -1,0 +1,52 @@
+{{#title Getting Started with Rust on Raspberry Pi Pico 2 | impl Rust for RP2350}}
+
+# impl Rust for RP2350 - Intro
+
+In this book, we use the Raspberry Pi Pico 2 and program it in Rust to explore various exciting projects. You'll work on exercises like dimming an LED, controlling a servo motor, measuring distance with an ultrasonic sensor, displaying the Ferris (🦀) image on an OLED display, using an RFID reader, playing songs on a buzzer, turning on an LED when the room light is off, measuring temperature, and much more.
+
+## Meet the hardware - Pico 2
+
+We will be using the Raspberry Pi Pico 2, which is based on the new RP2350 chip. It offers dual-core flexibility with support for ARM Cortex-M33 cores and optional Hazard3 RISC-V cores. By default, it operates using the standard ARM cores, but developers can choose to experiment with the RISC-V architecture if needed.
+
+You find more details from the [official website](https://www.raspberrypi.com/products/raspberry-pi-pico-2/).
+
+<div class="image-with-caption" style="text-align:center;">
+    <img src="./images/pico2.png" alt="Raspberry Pi Debug 2" style="width:400px; height:auto; display:block; margin:auto;"/>
+    <div class="caption" style="font-size:0.9em; color:#555; margin-top:6px;">Raspberry Pi Pico 2</div>
+</div>
+
+> [!NOTE]
+> There is an older Raspberry Pi Pico that uses the RP2040 chip. In this book, we will be using the newer **Pico 2** with the **RP2350** chip. When buying hardware, make sure to get the correct one!
+>
+> If you are looking for the RP2040 version of this book, you can find it here: [impl Rust for Pico](http://rp2040.implrust.com/)
+
+There is also a variant called the Pico 2 W, which includes Wi‑Fi and Bluetooth capabilities and is powered by the RP2350 chip. However, it is not fully compatible with the examples we've provided. If you want to follow along without adjustments, we recommend using the standard Pico 2 (non‑wireless) version. If you choose to buy the Pico 2 W or already have one, you still can follow along. Expect small differences, such as the onboard LED being used by Wi-Fi by default, but the core concepts remain the same.
+
+The **H** variants of both include a pinheader, which makes development a bit easier.
+
+## Datasheets
+
+For detailed technical information, specifications, and guidelines, refer to the official datasheets:
+
+- [Pico 2 Datasheet](https://datasheets.raspberrypi.com/pico/pico-2-datasheet.pdf)
+- [RP2350 chip Datasheet](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)
+
+## License
+
+The "impl Rust for RP2350" book(this project) is distributed under the following licenses:
+
+* The code samples and free-standing Cargo projects contained within this book are licensed under the terms of both the [MIT License] and the [Apache License v2.0].
+* The written prose contained within this book is licensed under the terms of the Creative Commons [CC-BY-SA v4.0] license.
+* Circuit diagrams in this book were created with Fritzing.
+
+[MIT License]: https://opensource.org/licenses/MIT
+[Apache License v2.0]: http://www.apache.org/licenses/LICENSE-2.0
+[CC-BY-SA v4.0]: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+## Support this project
+
+You can support this book by starring this project on [GitHub](https://github.com/ImplFerris/pico-pico) or sharing this book with others 😊
+
+### Disclaimer
+
+The experiments and projects shared in this book have worked for me, but results may vary. I'm not responsible for any issues or damage that may occur while you're experimenting. Please proceed with caution and take necessary safety precautions.
