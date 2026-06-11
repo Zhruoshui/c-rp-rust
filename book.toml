@@ -7,7 +7,7 @@ src = "src"
 
 [output.html]
 git-repository-url = "https://github.com/Zhruoshui/c-rp-rust"
-cname = "rp2350.aruoshui.com"
+cname = "rrpbook.aruoshui.fun"
 preferred-dark-theme = "ayu"
 default-theme = "light"
 mathjax-support = true
