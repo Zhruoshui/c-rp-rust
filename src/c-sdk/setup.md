@@ -6,6 +6,12 @@
 
 Rust 开发所需的 `rustup target`、`probe-rs`、Cargo runner 等内容放在 [Rust 环境](../setup.md) 中。
 
+# AI帮助环境安装：
+现在AI Agent开发时代，配置环境啥的也不用再折腾了，直接将我的文档链接发给AI agent即可：
+> https://github.com/Zhruoshui/c-rp-rust/blob/main/src/agent_help/rp2350-environment-setup.md
+
+注意：不要开启agent的全自动，最好每步都需要人工审核，一个是安全，第二个是及时纠正
+
 ## 需要安装什么
 
 C SDK 环境主要由四部分组成：
