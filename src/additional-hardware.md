@@ -2,30 +2,15 @@
 
 # Additional Hardware
 
-In this section we will look at some of the extra hardware you might use along with the Raspberry Pi Pico.
+## 可选硬件：调试探针
 
-## Electronic kits
-
-You can start with a basic electronics kit or buy components as you need them. A simple, low cost kit is enough to begin, as long as it includes resistors, jumper wires, and a breadboard. These are required throughout the lessons.
-
-<div class="image-with-caption" style="text-align:center;">
-    <img src="./images/basic-electronic-kits.jpg" alt="Basic Electronic Kits" style="width:400px; height:auto; display:block; margin:auto;"/>
-    <div class="caption" style="font-size:0.9em; color:#555; margin-top:6px;">Basic Electronic Kit</div>
-</div>
-
-Additional components used in this book include LEDs, the HC SR04 ultrasonic sensor, active and passive buzzers, the SG90 micro servo motor, an LDR, an NTC thermistor, the RC522 RFID reader, a micro SD card adapter, the HD44780 display, and a joystick module.
-
-## Optional Hardware: Debug Probe
-
-The Raspberry Pi Debug Probe makes flashing the Pico 2 much easier. Without it you must press the BOOTSEL button each time you want to upload new firmware. The probe also gives you proper debugging support, which is very helpful.
-
-This tool is optional. You can follow the entire book without owning one (except the one specific to debug probe). When I first started with the Pico, I worked without a probe and only bought it later.
+树莓派调试探针让为 Pico 2 刷写固件变得容易得多。没有它的话，每次想要上传新固件时都必须按下 BOOTSEL 按钮。该探针还提供了完善的调试支持，非常有用。
 
 <div class="image-with-caption" style="text-align:center;">
     <img src="./images/Raspberry Pi Pico Debug Probe Hardware.jpg" alt="Raspberry Pi Debug Probe connected with Pico" style="width:400px; height:auto; display:block; margin:auto;"/>
     <div class="caption" style="font-size:0.9em; color:#555; margin-top:6px;">Raspberry Pi Pico Debug Probe</div>
 </div>
 
-### How to decide?
-
-If you are on a tight budget, you can skip it for now because its price is roughly twice the cost of a Pico 2. If the cost is not an issue, it is a good purchase and becomes very handy. You can also use another Pico as a low cost debug probe if you have a second board available.
+本质上官方这个调试探针其实就是另一块 Pico 板子，如果你有另一块pico板子，也可以自己刷入**调试固件**：
+- [数据手册18~19页](https://pip-assets.raspberrypi.com/categories/610-raspberry-pi-pico/documents/RP-008276-DS-1-getting-started-with-pico.pdf)
+- [Debug using a Pico-series device](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#debug-using-a-pico-series-device)

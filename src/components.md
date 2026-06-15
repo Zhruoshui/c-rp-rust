@@ -1,36 +1,21 @@
-{{#title Components Used in Raspberry Pi Pico 2 Projects | impl Rust for RP2350}}
+{{#title 在 Raspberry Pi Pico 2 / Pico 2 W 上开始学习 Rust 与 C | impl Rust & C for RP2350}}
 
-# Components
+# 元件
 
-In this book, we will use various external components together with the Pico to build examples and experiments. These components are used to interact with the outside world, such as reading inputs, controlling outputs, and displaying information.
+结合 Pico 使用各种外部组件来构建示例和实验。
 
-Some components are simple parts like LEDs, buttons, resistors, LDRs, and thermistors. Others are assembled units such as displays, sensors, and interface devices that connect to the Pico using a small number of pins.
+我会在这里列出所需要的所有原件，可以随着进度逐步添置完善。
 
 > [!Important]
-> Some components may require soldering, for example attaching header pins to boards such as displays or sensor modules. Many parts are also available in pre-soldered form.
+> 某些组件可能需要焊接操作，例如将排针焊接到显示屏或传感器模块等电路板上。许多部件也提供已预先焊接好的版本。
 >
-> If a component does not have pins attached, you will need to solder them before use. Soldering is a practical skill in embedded work, so take your time and follow basic safety precautions.
+> 如果某个组件没有附带引脚，则使用前必须先进行焊接。焊接是嵌入式工作中的一项实用技能，请耐心操作并遵守基本的安全措施。
 
-This section only provides an overview of the components that appear throughout the book. Detailed explanations, wiring, and code examples are covered later in their respective chapters. You do not need to collect all components in advance. You can add them gradually as you progress through the book.
+##　元件清单
 
-## Components Used in This Book
+以下列出的是参考用的器件名称，在购买之前请查阅对应的章节内容以确认所选模块类型及其引脚布局是否与书中的实例一致：
 
-Component names are provided for reference. Before purchasing, check the corresponding chapter to ensure the module type and pin layout match the examples used in this book.
-
-- Breadboard
-- Jumper wires (male-male, male-female)
-- LED
-- Resistors (common values: 330 ohm, 1k ohm, 2.2k ohm, 10k ohm)
-- Push button (tactile switch)
-- LDR (Light Dependent Resistor)
-- NTC Thermistor (10k)
-- OLED display (SSD1306, 128x64, I2C)
-- LCD display (16x2, HD44780 compatible)
-- Ultrasonic sensor (HC-SR04 / HC-SR04+)
-- Buzzer (active and passive)
-- Servo motor (SG90)
-- MAX7219 8X8 Dot LED Matrix Display Module
-- RFID module (RC522)
-- Micro SD Card Reader Module (SPI)
-- Joystick module (PS2 type)
-
+| 组件 | 所用的数量 |
+| :--- | :--- |
+| 杜邦线（公对公 / 公对母） | 若干 |
+| [官方Debug-Probe，带JST-SH 3pin 转 2.54mm、三针 JST-SH 连接器] (可选硬件) | 1 |

@@ -10,7 +10,7 @@
     </p>
     <p style="opacity: 0.9; margin-bottom: 20px; font-size: 1em;">如果你在阅读过程中发现任何问题，欢迎通过以下方式反馈：</p>
     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-        <a href="https://github.com/Zhruoshui/c-rp-rust" target="_blank" style="text-decoration: none;">
+        <a href="https://github.com/Zhruoshui/c-rp-rust/issues/new" target="_blank" style="text-decoration: none;">
             <img src="https://img.shields.io/badge/GitHub-Report_Issue-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Issues">
         </a>
         <a href="mailto:Aruoshui_Zh@outlook.com" style="text-decoration: none;">

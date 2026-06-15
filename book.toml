@@ -1,6 +1,6 @@
 [book]
-title = "impl Rust & C for RP2350"
-description = "Learn embedded programming on Raspberry Pi Pico 2 (RP2350) with hands-on examples in both C (Pico SDK) and Rust. Covers GPIO, PWM, I2C, SPI, and more."
+title = "“为 RP2350 实现 Rust 与 C”"
+description = "学习如何在 Raspberry Pi Pico 2 (RP2350) 上进行嵌入式编程，提供 C 语言（Pico SDK）和 Rust 的实践示例。涵盖 GPIO、PWM、I2C、SPI 等内容。"
 authors = ["ImplFerris", "Zhruoshui"]
 language = "en"
 src = "src"
