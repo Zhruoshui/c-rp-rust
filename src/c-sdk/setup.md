@@ -147,7 +147,7 @@ getent group plugdev || sudo groupadd -r plugdev
 sudo usermod -aG plugdev "$USER"
 ```
 
-然后重新登录，并拔下重新插入 Pico。
+然后**重新登录,或者重启电脑**，并拔下重新插入 Pico。
 
 ## 构建官方示例验证环境
 

@@ -7,12 +7,14 @@
     - [元件清单](./components.md)
   - [Pico 2 / Pico 2 W 引脚图](./pico2-pinout.md)
   - [C SDK 环境](./c-sdk/setup.md)
-  - [Rust 环境](./setup.md)
-  - [快速入门](./quick-start.md)
+  - [Rust 环境](./setup.m)
+  - [快速入门 for C](./quick-start-for-c.md)
+  - [快速入门 for Rust](./quick-start-for-rust.md)
   - [抽象层次](./abstraction-layers.md)
   - [Rust: cargo-generate 项目模板](./cargo-generate.md)
   - [C: CMake 项目模板](./c-sdk/project-template.md)
   - [烧录程序](./running.md)
+  - [Pico 在 VS Code 中](./pico-in-vscode/create-project.md)
 
 - [Debug Probe](./debugging/pico-debug-probe.md)
   - [RTT](./debugging/rtt.md)
@@ -36,7 +38,7 @@
   - [烧录到 Pico](./std-to-no-std/flashing-rust-into-pico.md)
   - [链接脚本](./std-to-no-std/rust-linker-script.md)
 
-- [Pico 在 VS Code 中](./pico-in-vscode/create-rust-project.md)
+
 
 - [C SDK 程序结构](./c-sdk/program-structure.md)
   - [GPIO 与寄存器操作](./c-sdk/gpio-registers.md)
