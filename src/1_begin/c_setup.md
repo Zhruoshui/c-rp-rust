@@ -1,16 +1,19 @@
 {{#title 为 Raspberry Pi Pico 2 搭建 C SDK 开发环境 | impl Rust for RP2350}}
 
+# 安装环境说明
+树莓派pico在 Windows、macOS 和 Linux 上提供统一的开发体验，本书就基于linux平台完成开发工作。
+
 # C SDK 环境搭建
 
 本章覆盖 Raspberry Pi Pico C/C++ SDK 的本地构建环境。即使你主要写 Rust，也建议配置好这一部分，因为 `picotool`、官方 C 示例、部分工具和底层资料都会用到 Pico SDK。
 
-Rust 开发所需的 `rustup target`、`probe-rs`、Cargo runner 等内容放在 [Rust 环境](../setup.md) 中。
+Rust 开发所需的 `rustup target`、`probe-rs`、Cargo runner 等内容放在 [Rust 环境](./rust_setup.md) 中。
 
 # AI帮助环境安装：
 现在AI Agent开发时代，配置环境啥的也不用再折腾了，直接将我的文档链接发给AI agent即可：
 > https://github.com/Zhruoshui/c-rp-rust/blob/main/src/agent_help/rp2350-environment-setup.md
 
-注意：不要开启agent的全自动，最好每步都需要人工审核，一个是安全，第二个是及时纠正
+注意：不要开启agent的全自动，最好每步都需要人工审核，第一个是安全，第二个是及时纠正
 
 ## 需要安装什么
 

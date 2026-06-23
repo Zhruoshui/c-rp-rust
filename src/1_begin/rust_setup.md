@@ -2,7 +2,7 @@
 
 # Rust 环境搭建
 
-本章只覆盖 Rust 开发、烧录和调试需要的工具。C SDK、`arm-none-eabi-gcc`、`PICO_SDK_PATH` 等内容放在 [C SDK 环境](./c-sdk/setup.md) 中。
+本章只覆盖 Rust 开发、烧录和调试需要的工具。C SDK、`arm-none-eabi-gcc`、`PICO_SDK_PATH` 等内容放在 [C SDK 环境](./c_setup.md) 中。
 
 对于本书的 Rust 示例，最常用的流程有两种：
 

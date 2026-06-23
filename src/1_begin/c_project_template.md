@@ -378,4 +378,4 @@ target_link_libraries(my_pico_app
 )
 ```
 
-这样使用 `pico-examples`，它就不只是“能跑的例子”，而是你后续写 Pico C 工程时最可靠的一组官方模板。
+这样使用 `pico-examples`，它就不只是"能跑的例子"，而是你后续写 Pico C 工程时最可靠的一组官方模板。

@@ -197,7 +197,7 @@ cp build-pico2w/pico2_manual_blink.uf2 /run/media/$USER/RP2350/
 复制完成后，U 盘会自动断开，板子重启，板载 LED 开始闪烁。
 
 另外你也可以直接把对应文件拖到 `RP2350` 盘里即可，不过能自动化是最好的：
-![](../images/programming.png)
+![](./images/programming.png)
 
 ## 使用 Debug Probe 烧录
 

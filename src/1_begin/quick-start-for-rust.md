@@ -127,7 +127,7 @@ No accessible RP-series devices in BOOTSEL mode were found.
 通常说明板子当前没有进入 BOOTSEL 模式，或者系统的 udev 规则还没有对当前用户生效。先重新按住 `BOOTSEL` 插入 USB，再试一次。
 
 另外你也可以直接把对应文件拖到 `RP2350` 盘里即可，不过能自动化是最好的：
-![](../images/programming.png)
+![](./images/programming.png)
 
 
 ## 使用 Debug Probe 烧录
