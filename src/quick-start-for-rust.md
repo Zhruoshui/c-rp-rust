@@ -103,8 +103,7 @@ cargo build --release --no-default-features --features pico2w
 2. 按住 `BOOTSEL` 按钮不放。
 3. 保持按住按钮，用 USB 线把 Pico 接到电脑。
 4. 电脑识别到 BOOTSEL 设备后，松开按钮。
-5. 运行对应命令。
-
+5. 运行对应命令
 <img style="display: block; margin: auto;" alt="bootsel" src="./images/bootsel.png"/>
 
 Pico 2：
@@ -126,6 +125,10 @@ No accessible RP-series devices in BOOTSEL mode were found.
 ```
 
 通常说明板子当前没有进入 BOOTSEL 模式，或者系统的 udev 规则还没有对当前用户生效。先重新按住 `BOOTSEL` 插入 USB，再试一次。
+
+另外你也可以直接把对应文件拖到 `RP2350` 盘里即可，不过能自动化是最好的：
+![](../images/programming.png)
+
 
 ## 使用 Debug Probe 烧录
 
