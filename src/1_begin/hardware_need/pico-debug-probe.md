@@ -86,6 +86,8 @@ Debug Probe 不会给 Pico 2 供电，它只提供 SWD 和 UART 信号。要给 
 本质上官方这个调试探针其实就是另一块 Pico 板子，如果你有另一块pico板子，也可以自己刷入**调试固件**：
 
 ![自制官方调试probe](../images/2-pico-debug.png)
+
+可以参照，来实现：
 - [数据手册18~19页](https://pip-assets.raspberrypi.com/categories/610-raspberry-pi-pico/documents/RP-008276-DS-1-getting-started-with-pico.pdf)
 - [Debug using a Pico-series device](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#debug-using-a-pico-series-device)
 

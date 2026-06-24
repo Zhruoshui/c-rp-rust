@@ -3,6 +3,9 @@
 # 安装环境说明
 树莓派pico在 Windows、macOS 和 Linux 上提供统一的开发体验，本书就基于linux平台完成开发工作。
 
+> [!NOTE]
+>如果你平时使用windows开发，你可以遵循这篇文章来配置环境：https://www.cnblogs.com/Koomee/p/1905224
+
 # C SDK 环境搭建
 
 本章覆盖 Raspberry Pi Pico C/C++ SDK 的本地构建环境。即使你主要写 Rust，也建议配置好这一部分，因为 `picotool`、官方 C 示例、部分工具和底层资料都会用到 Pico SDK。

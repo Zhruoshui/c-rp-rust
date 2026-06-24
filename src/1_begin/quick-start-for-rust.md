@@ -4,7 +4,7 @@
 
 ## Pico 2 和 Pico 2 W 的差异
 
-还记得在[引脚图](./pico2-pinout.md)中提及的吗？
+还记得在[Pico 2 和 Pico 2 W 的差异](./1_begin/different_between_pico2_pico2W.md)中提及的吗？
 
 > [!NOTE]
 > Pico 2 和 Pico 2 W 都基于 RP2350，但它们的板载 LED 接法不同：
