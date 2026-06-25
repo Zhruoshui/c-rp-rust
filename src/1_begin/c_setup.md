@@ -12,8 +12,16 @@
 
 Rust 开发所需的 `rustup target`、`probe-rs`、Cargo runner 等内容放在 [Rust 环境](./rust_setup.md) 中。
 
+对于本书的 C 示例，最常用的流程有两种：
+
+1. 使用 `picotool` 通过 BOOTSEL 模式烧录。
+2. 使用 `openocd` 通过 Debug Probe 烧录和调试。
+
+如果你暂时没有 Debug Probe，先配置 `picotool` 就足够完成大多数入门示例。
+
+
 # AI帮助环境安装：
-现在AI Agent开发时代，配置环境啥的也不用再折腾了，直接将我的文档链接发给AI agent即可：
+现在AI Agent开发时代，配置环境啥的也不用再折腾了，直接将我的文档链接发给AI agent即可（这也算是在linux上完成开发的一种优势吧，安装等都不依赖图形界面，非常适合ai自主完成）：
 > https://github.com/Zhruoshui/c-rp-rust/blob/main/src/agent_help/rp2350-environment-setup.md
 
 注意：不要开启agent的全自动，最好每步都需要人工审核，第一个是安全，第二个是及时纠正
@@ -154,6 +162,79 @@ sudo usermod -aG plugdev "$USER"
 ```
 
 然后**重新登录,或者重启电脑**，并拔下重新插入 Pico。
+
+## OpenOCD - 烧录与调试工具
+
+`OpenOCD` 是嵌入式开发中常用的开源调试和烧录工具。对于 Pico 2 / RP2350，推荐使用 Raspberry Pi 官方维护的[下游分支](https://github.com/raspberrypi/openocd)，它包含了 RP2350 的完整支持。使用 Raspberry Pi Debug Probe 或其他 CMSIS-DAP 调试探针时，可以用它来下载程序和调试。
+
+Rust 环境对应的工具是 `probe-rs`，相关内容在 [Rust 环境](./rust_setup.md) 中。
+
+### 安装构建依赖
+
+OpenOCD 从源码构建需要一些依赖，安装后可以用 `openocd --version` 验证。
+
+Debian / Ubuntu:
+
+```sh
+sudo apt install build-essential pkg-config libusb-1.0-0-dev \
+    libtool autoconf automake texinfo libftdi1-dev libhidapi-dev
+```
+
+Arch Linux:
+
+```sh
+sudo pacman -S --needed base-devel pkgconf libusb libtool autoconf \
+    automake texinfo libftdi hidapi
+```
+
+### 克隆并构建 OpenOCD
+
+这里假设把工具放在 `~/embedded` 下：
+
+```sh
+cd ~/embedded
+git clone https://github.com/raspberrypi/openocd --branch rpi-common --depth=1
+
+cd openocd
+./bootstrap
+./configure --enable-ftdi --enable-cmsis-dap
+make -j8
+sudo make install
+```
+
+`--enable-cmsis-dap` 启用 CMSIS-DAP 调试探针支持（Raspberry Pi Debug Probe 就是 CMSIS-DAP）。`--enable-ftdi` 启用 FTDI 芯片支持，这是很多第三方调试器的底层芯片。
+
+验证安装：
+
+```sh
+openocd --version
+```
+
+### 配置 OpenOCD 的 udev 规则
+
+默认情况下，Linux 上的调试探针通常只能由 root 访问。安装 udev 规则后，普通用户也可以使用 `openocd`：
+
+```sh
+sudo install -m 0644 contrib/60-openocd.rules /etc/udev/rules.d/60-openocd.rules
+sudo udevadm control --reload-rules
+```
+
+如果系统没有 `plugdev` 组，同样需要创建并加入：
+
+```sh
+getent group plugdev || sudo groupadd -r plugdev
+sudo usermod -aG plugdev "$USER"
+```
+
+修改用户组后需要重新登录，或者重启系统，当前终端会话才一定能拿到新组权限。
+
+验证是否能连接 Debug Probe：
+
+```sh
+openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg -c "adapter speed 5000" -c "init; exit"
+```
+
+没有连接 Debug Probe 时，会看到类似 `Error: unable to find a matching CMSIS-DAP device` 的错误，这是正常的。如果出现权限错误，优先检查 udev 规则是否已重载、当前用户是否已经重新登录。
 
 ## 构建官方示例验证环境
 

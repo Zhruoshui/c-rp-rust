@@ -20,6 +20,17 @@
 Pico 2 W 支持 Wi-Fi 和蓝牙功能，同样基于 RP2350 芯片。对于普通 GPIO、PWM、ADC、I2C、SPI 等外设章节，Pico 2 和 Pico 2 W 的核心用法保持一致；涉及板载 LED、无线芯片或引脚差异的章节，会在内容中给出对应说明。
 
 
+## 开发工具对照
+
+本书的 C 和 Rust 示例各自使用对应的烧录和调试工具：
+
+| 用途 | C 工具 | Rust 工具 |
+|------|--------|-----------|
+| BOOTSEL 模式烧录（无 Debug Probe） | `picotool` | `picotool` |
+| Debug Probe 烧录与调试 | `openocd` | `probe-rs` |
+
+如果没有 Debug Probe，配置 `picotool` 就足够完成大多数入门示例。具体安装步骤见 [C SDK 环境](./1_begin/c_setup.md) 和 [Rust 环境](./1_begin/rust_setup.md)。
+
 ## 数据手册
 
 如需查看详细的技术信息、规格参数和设计指南，可以参考官方数据手册：

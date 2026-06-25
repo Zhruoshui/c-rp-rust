@@ -203,21 +203,23 @@ cp build-pico2w/pico2_manual_blink.uf2 /run/media/$USER/RP2350/
 
 如果你连接了 Debug Probe，就不需要按 `BOOTSEL`。目标板仍然需要通过 USB 或外部电源供电，并且 Debug Probe 的 `SWDIO`、`SWCLK`、`GND` 要和 Pico 正确连接。
 
-先完成前面对应板型的编译，下面使用 `probe-rs` 作为示例。Pico 2：
+先完成前面对应板型的编译，下面使用 `openocd` 作为示例。Pico 2：
 
 ```sh
-probe-rs run --chip RP235x --protocol swd build-pico2/pico2_manual_blink.elf
+openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg \
+    -c "adapter speed 5000; program build-pico2/pico2_manual_blink.elf verify reset exit"
 ```
 
 Pico 2 W：
 
 ```sh
-probe-rs run --chip RP235x --protocol swd build-pico2w/pico2_manual_blink.elf
+openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg \
+    -c "adapter speed 5000; program build-pico2w/pico2_manual_blink.elf verify reset exit"
 ```
 
 烧录完成后，程序会自动运行，板载 LED 开始闪烁。
 
-如果命令提示找不到 probe，通常需要检查 Debug Probe 的 USB 连接、SWD 接线，以及当前用户是否有访问调试器的权限。
+如果命令提示找不到 CMSIS-DAP 设备，通常需要检查 Debug Probe 的 USB 连接、SWD 接线，以及当前用户是否有访问调试器的权限。
 
 ## 自动化烧录
 
@@ -281,7 +283,9 @@ No accessible RP-series devices in BOOTSEL mode were found.
 
 ```cmake
 add_custom_target(pico2_manual_blink_probe
-    COMMAND probe-rs run --chip RP235x --protocol swd $<TARGET_FILE:pico2_manual_blink>
+    COMMAND openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg
+            -c "adapter speed 5000"
+            -c "program $<TARGET_FILE:pico2_manual_blink> verify reset exit"
     DEPENDS pico2_manual_blink
     USES_TERMINAL
 )
@@ -303,4 +307,4 @@ Pico 2 W：
 cmake --build build-pico2w --target pico2_manual_blink_probe
 ```
 
-这个目标会先构建 `pico2_manual_blink`，再把生成的 ELF 文件交给 `probe-rs` 烧录并运行。
+这个目标会先构建 `pico2_manual_blink`，再把生成的 ELF 文件交给 `openocd` 烧录并运行。

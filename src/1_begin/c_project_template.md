@@ -210,7 +210,9 @@ add_custom_target(blink_run
 )
 
 add_custom_target(blink_probe
-    COMMAND probe-rs run --chip RP235x --protocol swd $<TARGET_FILE:blink>
+    COMMAND openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg
+            -c "adapter speed 5000"
+            -c "program $<TARGET_FILE:blink> verify reset exit"
     DEPENDS blink
     USES_TERMINAL
 )
@@ -289,7 +291,9 @@ add_custom_target(my_pico_app_run
 )
 
 add_custom_target(my_pico_app_probe
-    COMMAND probe-rs run --chip RP235x --protocol swd $<TARGET_FILE:my_pico_app>
+    COMMAND openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg
+            -c "adapter speed 5000"
+            -c "program $<TARGET_FILE:my_pico_app> verify reset exit"
     DEPENDS my_pico_app
     USES_TERMINAL
 )
