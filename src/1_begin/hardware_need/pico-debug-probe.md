@@ -55,7 +55,7 @@ SWD 连接负责让你烧录固件并使用调试器。请使用 Debug Probe 随
 
 ### UART 连接（可选）
 
-如果你想在电脑终端里看到串口输出（例如 Rust 的 `println!` 日志），UART 连接就很有用。它与 SWD 连接是分开的。
+如果你想在电脑终端里看到串口输出，UART 连接就很有用。它与 SWD 连接是分开的。
 
 将 Debug Probe U 端口上的导线连接到 Pico 2 引脚：
 
@@ -83,11 +83,10 @@ Debug Probe 不会给 Pico 2 供电，它只提供 SWD 和 UART 信号。要给 
 现在你可以直接通过开发环境给 Pico 2 烧录和调试，不需要任何手动介入。
 
 # 自己做一块？
-本质上官方这个调试探针其实就是另一块 Pico 板子，如果你有另一块pico板子，也可以自己刷入**调试固件**：
+本质上官方这个调试探针其实就是另一块 Pico 板子，如果你有另一块pico板子，也可以自己刷入**调试固件**，可以参考链接：
+- [数据手册18~19页](https://pip-assets.raspberrypi.com/categories/610-raspberry-pi-pico/documents/RP-008276-DS-1-getting-started-with-pico.pdf)
+- [Debug using a Pico-series device](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#debug-using-a-pico-series-device)
 
 ![自制官方调试probe](../images/2-pico-debug.png)
 
-可以参照，来实现：
-- [数据手册18~19页](https://pip-assets.raspberrypi.com/categories/610-raspberry-pi-pico/documents/RP-008276-DS-1-getting-started-with-pico.pdf)
-- [Debug using a Pico-series device](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#debug-using-a-pico-series-device)
 

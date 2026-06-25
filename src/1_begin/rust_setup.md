@@ -15,6 +15,12 @@
 
 如果你暂时没有 Debug Probe，先配置 `picotool` 就足够完成大多数入门示例。
 
+# AI帮助环境安装：
+现在AI Agent开发时代，配置环境啥的也不用再折腾了，直接将我的文档链接发给AI agent即可（这也算是在linux上完成开发的一种优势吧，安装等都不依赖图形界面，非常适合ai自主完成）：
+> https://github.com/Zhruoshui/c-rp-rust/blob/main/src/agent_help/rp2350-environment-setup.md
+
+注意：不要开启agent的全自动，最好每步都需要人工审核，第一个是安全，第二个是及时纠正
+
 ## Picotool
 
 `picotool` 是 Raspberry Pi 官方工具。它可以查看 UF2/ELF 的元数据，也可以在 Pico 2 处于 BOOTSEL 模式时把程序写入开发板。
