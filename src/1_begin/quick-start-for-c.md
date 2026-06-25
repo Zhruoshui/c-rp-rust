@@ -203,18 +203,20 @@ cp build-pico2w/pico2_manual_blink.uf2 /run/media/$USER/RP2350/
 
 如果你连接了 Debug Probe，就不需要按 `BOOTSEL`。目标板仍然需要通过 USB 或外部电源供电，并且 Debug Probe 的 `SWDIO`、`SWCLK`、`GND` 要和 Pico 正确连接。
 
-先完成前面对应板型的编译，下面使用 `openocd` 作为示例。Pico 2：
+先完成前面对应板型的编译，下面使用 `openocd` 烧录生成的 ELF。Pico 2：
 
 ```sh
 openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg \
-    -c "adapter speed 5000; program build-pico2/pico2_manual_blink.elf verify reset exit"
+    -c "adapter speed 5000" \
+    -c "program build-pico2/pico2_manual_blink.elf verify reset exit"
 ```
 
 Pico 2 W：
 
 ```sh
 openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg \
-    -c "adapter speed 5000; program build-pico2w/pico2_manual_blink.elf verify reset exit"
+    -c "adapter speed 5000" \
+    -c "program build-pico2w/pico2_manual_blink.elf verify reset exit"
 ```
 
 烧录完成后，程序会自动运行，板载 LED 开始闪烁。
@@ -282,8 +284,12 @@ No accessible RP-series devices in BOOTSEL mode were found.
 在 `CMakeLists.txt` 中追加：
 
 ```cmake
+set(OPENOCD openocd CACHE FILEPATH "Path to OpenOCD executable")
+
 add_custom_target(pico2_manual_blink_probe
-    COMMAND openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg
+    COMMAND ${OPENOCD}
+            -f interface/cmsis-dap.cfg
+            -f target/rp2350.cfg
             -c "adapter speed 5000"
             -c "program $<TARGET_FILE:pico2_manual_blink> verify reset exit"
     DEPENDS pico2_manual_blink
@@ -307,4 +313,4 @@ Pico 2 W：
 cmake --build build-pico2w --target pico2_manual_blink_probe
 ```
 
-这个目标会先构建 `pico2_manual_blink`，再把生成的 ELF 文件交给 `openocd` 烧录并运行。
+这个目标会先构建 `pico2_manual_blink`，再把生成的 ELF 文件交给 `openocd` 烧录并运行。`OPENOCD` 默认使用 `PATH` 中的 `openocd`；如果你把 OpenOCD 安装在工作区目录，可以在配置时显式传入，例如 `-DOPENOCD=$HOME/embedded/openocd-install/bin/openocd`。

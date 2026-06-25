@@ -209,8 +209,12 @@ add_custom_target(blink_run
     USES_TERMINAL
 )
 
+set(OPENOCD openocd CACHE FILEPATH "Path to OpenOCD executable")
+
 add_custom_target(blink_probe
-    COMMAND openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg
+    COMMAND ${OPENOCD}
+            -f interface/cmsis-dap.cfg
+            -f target/rp2350.cfg
             -c "adapter speed 5000"
             -c "program $<TARGET_FILE:blink> verify reset exit"
     DEPENDS blink
@@ -231,6 +235,8 @@ cmake --build build-pico2 --target blink_run
 ```sh
 cmake --build build-pico2 --target blink_probe
 ```
+
+`OPENOCD` 默认使用 `PATH` 中的 `openocd`。如果你把 OpenOCD 安装在工作区目录，可以在配置时传入 `-DOPENOCD=/path/to/openocd-install/bin/openocd`。
 
 ## 复用成自己的工程
 
@@ -290,8 +296,12 @@ add_custom_target(my_pico_app_run
     USES_TERMINAL
 )
 
+set(OPENOCD openocd CACHE FILEPATH "Path to OpenOCD executable")
+
 add_custom_target(my_pico_app_probe
-    COMMAND openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg
+    COMMAND ${OPENOCD}
+            -f interface/cmsis-dap.cfg
+            -f target/rp2350.cfg
             -c "adapter speed 5000"
             -c "program $<TARGET_FILE:my_pico_app> verify reset exit"
     DEPENDS my_pico_app
@@ -347,6 +357,14 @@ cmake --build build-pico2 --target my_pico_app_run
 
 ```sh
 cmake --build build-pico2 --target my_pico_app_probe
+```
+
+如果 `openocd` 不在 `PATH` 中，重新配置时显式传入路径：
+
+```sh
+cmake -S . -B build-pico2 \
+    -DPICO_BOARD=pico2 \
+    -DOPENOCD=$HOME/embedded/openocd-install/bin/openocd
 ```
 
 ## 什么时候继续使用 pico-examples

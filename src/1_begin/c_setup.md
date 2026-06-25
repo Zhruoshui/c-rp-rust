@@ -28,12 +28,13 @@ Rust 开发所需的 `rustup target`、`probe-rs`、Cargo runner 等内容放在
 
 ## 需要安装什么
 
-C SDK 环境主要由四部分组成：
+C SDK 环境主要由五部分组成：
 
 1. 系统构建工具：CMake、Make、C/C++ 编译器、Python、Git。
 2. ARM bare-metal 交叉编译器：`arm-none-eabi-gcc`。
 3. Pico SDK：官方 SDK 仓库及其子模块。
 4. picotool：用于生成 UF2、查看二进制信息和 BOOTSEL 烧录。
+5. OpenOCD：通过 Debug Probe 使用 SWD 烧录和调试。
 
 ## 安装系统依赖
 
@@ -187,27 +188,47 @@ sudo pacman -S --needed base-devel pkgconf libusb libtool autoconf \
     automake texinfo libftdi hidapi
 ```
 
-### 克隆并构建 OpenOCD
+### 克隆、构建并安装 OpenOCD
 
-这里假设把工具放在 `~/embedded` 下：
+这里假设把工具放在 `~/embedded` 下，并把 OpenOCD 安装到同一个工作区中的 `openocd-install`，这样不需要 `sudo make install`，也不会和系统仓库里的 OpenOCD 混在一起：
 
 ```sh
 cd ~/embedded
 git clone https://github.com/raspberrypi/openocd --branch rpi-common --depth=1
 
 cd openocd
+git submodule update --init --recursive
 ./bootstrap
-./configure --enable-ftdi --enable-cmsis-dap
+./configure \
+    --prefix="$HOME/embedded/openocd-install" \
+    --enable-ftdi \
+    --enable-cmsis-dap \
+    --enable-internal-jimtcl \
+    --enable-internal-libjaylink \
+    --disable-werror
 make -j8
-sudo make install
+make install
 ```
 
 `--enable-cmsis-dap` 启用 CMSIS-DAP 调试探针支持（Raspberry Pi Debug Probe 就是 CMSIS-DAP）。`--enable-ftdi` 启用 FTDI 芯片支持，这是很多第三方调试器的底层芯片。
+
+`git submodule update --init --recursive` 很重要。OpenOCD 的 `rpi-common` 分支依赖 `jimtcl` 和 `libjaylink` 子模块；如果只克隆主仓库，配置阶段可能会报 `jimtcl is required but not found`。这里使用 `--enable-internal-jimtcl` 和 `--enable-internal-libjaylink`，优先使用随 OpenOCD 源码固定版本的依赖，减少不同发行版包版本带来的差异。
+
+`--disable-werror` 是为了兼容较新的 GCC。某些发行版上 OpenOCD 下游分支会因为 warning 被当作 error 而构建失败；关闭 Werror 不会关闭正常 warning，只是不让 warning 中断构建。
+
+把 OpenOCD 加入 `PATH`：
+
+```sh
+export PATH="$HOME/embedded/openocd-install/bin:$PATH"
+```
+
+如果你希望每个新终端都能直接运行 `openocd`，把上面这行写入 `~/.bashrc`、`~/.zshrc` 或你正在使用的 shell 配置文件。
 
 验证安装：
 
 ```sh
 openocd --version
+test -f "$HOME/embedded/openocd-install/share/openocd/scripts/target/rp2350.cfg"
 ```
 
 ### 配置 OpenOCD 的 udev 规则
@@ -217,6 +238,7 @@ openocd --version
 ```sh
 sudo install -m 0644 contrib/60-openocd.rules /etc/udev/rules.d/60-openocd.rules
 sudo udevadm control --reload-rules
+sudo udevadm trigger
 ```
 
 如果系统没有 `plugdev` 组，同样需要创建并加入：
@@ -234,7 +256,7 @@ sudo usermod -aG plugdev "$USER"
 openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg -c "adapter speed 5000" -c "init; exit"
 ```
 
-没有连接 Debug Probe 时，会看到类似 `Error: unable to find a matching CMSIS-DAP device` 的错误，这是正常的。如果出现权限错误，优先检查 udev 规则是否已重载、当前用户是否已经重新登录。
+没有连接 Debug Probe 时，会看到类似 `Error: unable to find a matching CMSIS-DAP device` 的错误，这是正常的。连接成功时应能看到 CMSIS-DAP 设备信息、`Cortex-M33` 识别信息，以及 `rp2350.cm0` / `rp2350.cm1` examination succeeded。如果出现权限错误，优先检查 udev 规则是否已重载、当前用户是否已经重新登录。
 
 ## 构建官方示例验证环境
 
@@ -266,10 +288,27 @@ build-pico2/blink/blink.uf2
 build-pico2/blink/blink.bin
 ```
 
-`blink.uf2` 可以拖拽到 BOOTSEL 模式下出现的 RPI-RP2 磁盘，也可以使用 `picotool` 烧录。
+`blink.uf2` 可以拖拽到 BOOTSEL 模式下出现的 `RP2350` 磁盘，也可以使用 `picotool` 烧录。
 
 ```sh
 picotool load -u -v -x build-pico2/blink/blink.uf2
+```
+
+如果已经连接 Raspberry Pi Debug Probe，推荐直接使用 OpenOCD 烧录 ELF：
+
+```sh
+openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg \
+    -c "adapter speed 5000" \
+    -c "program build-pico2/blink/blink.elf verify reset exit"
+```
+
+成功时会看到：
+
+```text
+** Programming Finished **
+** Verify Started **
+** Verified OK **
+** Resetting Target **
 ```
 
 ## 常见问题
@@ -342,3 +381,38 @@ ERROR: Failed to initialise libUSB
 ```
 
 这通常不是 Pico SDK 安装问题，而是当前运行环境没有 USB 设备访问权限。请在普通终端中再次运行 `picotool info` 确认。
+
+### jimtcl is required but not found
+
+如果构建 OpenOCD 时看到：
+
+```text
+configure: error: jimtcl is required but not found via pkg-config and system includes
+```
+
+通常是没有初始化 OpenOCD 子模块，或者系统没有安装 `jimtcl` 开发文件。推荐使用随源码固定的内部依赖：
+
+```sh
+cd ~/embedded/openocd
+git submodule update --init --recursive
+./bootstrap
+./configure \
+    --prefix="$HOME/embedded/openocd-install" \
+    --enable-ftdi \
+    --enable-cmsis-dap \
+    --enable-internal-jimtcl \
+    --enable-internal-libjaylink \
+    --disable-werror
+make -j8
+make install
+```
+
+### OpenOCD 构建时 warning 被当作 error
+
+如果较新的 GCC 让 OpenOCD 因 warning 构建失败，可以在配置阶段加入：
+
+```sh
+--disable-werror
+```
+
+这只是不把 warning 升级为 error，不会关闭编译器 warning 本身。
