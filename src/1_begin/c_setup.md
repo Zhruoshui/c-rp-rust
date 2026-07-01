@@ -4,7 +4,7 @@
 树莓派pico在 Windows、macOS 和 Linux 上提供统一的开发体验，本书就基于linux平台完成开发工作。
 
 > [!NOTE]
->如果你平时使用windows开发，你可以遵循这篇文章来配置环境：https://www.cnblogs.com/Koomee/p/1905224
+>如果你平时使用windows开发，你可以遵循这篇文章来配置环境：https://www.cnblogs.com/Koomee/p/19052241
 
 # C SDK 环境搭建
 
@@ -70,6 +70,9 @@ Compiler 'arm-none-eabi-gcc' not found
 ## 获取 Pico SDK
 
 这里假设把 SDK 放在 `~/embedded` 下：
+
+> [!IMPORTANT]
+> *--注意，后续本书的文件路径等基本都放在这个路径下，如果你需要放在其他位置，请对应的做出修改*
 
 ```sh
 mkdir -p ~/embedded
