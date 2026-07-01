@@ -2,9 +2,11 @@
 
 `pico-examples` 是 Raspberry Pi 官方维护的 Pico SDK 示例仓库。可以把它当成 Pico C 工程的参考模板，学习官方推荐的 CMake 组织方式，然后把其中一个示例裁剪成自己的工程。
 
-先克隆官方示例：
+官方插件可以通过 `Raspberry Pi Pico: New Example Pico Project` 创建示例项目。如果你想在命令行里阅读和构建完整 `pico-examples`，建议把官方示例仓库克隆到自己的工作区；构建工具仍然使用 `~/.pico-sdk` 里的 SDK、CMake、Ninja 和工具链：
 
 ```sh
+mkdir -p ~/pico
+cd ~/pico
 git clone https://github.com/raspberrypi/pico-examples.git
 cd pico-examples
 ```
@@ -210,9 +212,15 @@ add_custom_target(blink_run
 )
 
 set(OPENOCD openocd CACHE FILEPATH "Path to OpenOCD executable")
+set(OPENOCD_SCRIPTS "" CACHE PATH "Path to OpenOCD scripts")
+set(OPENOCD_SCRIPT_ARGS "")
+if (OPENOCD_SCRIPTS)
+    list(APPEND OPENOCD_SCRIPT_ARGS -s ${OPENOCD_SCRIPTS})
+endif()
 
 add_custom_target(blink_probe
     COMMAND ${OPENOCD}
+            ${OPENOCD_SCRIPT_ARGS}
             -f interface/cmsis-dap.cfg
             -f target/rp2350.cfg
             -c "adapter speed 5000"
@@ -236,7 +244,7 @@ cmake --build build-pico2 --target blink_run
 cmake --build build-pico2 --target blink_probe
 ```
 
-`OPENOCD` 默认使用 `PATH` 中的 `openocd`。如果你把 OpenOCD 安装在工作区目录，可以在配置时传入 `-DOPENOCD=/path/to/openocd-install/bin/openocd`。
+`OPENOCD` 默认使用 `PATH` 中的 `openocd`。如果你使用官方插件安装的 OpenOCD，可以在配置时传入 `-DOPENOCD=$HOME/.pico-sdk/openocd/0.12.0+dev/openocd` 和 `-DOPENOCD_SCRIPTS=$HOME/.pico-sdk/openocd/0.12.0+dev/scripts`；如果你走手动路线，则改成自己的 OpenOCD 安装路径。
 
 ## 复用成自己的工程
 
@@ -297,9 +305,15 @@ add_custom_target(my_pico_app_run
 )
 
 set(OPENOCD openocd CACHE FILEPATH "Path to OpenOCD executable")
+set(OPENOCD_SCRIPTS "" CACHE PATH "Path to OpenOCD scripts")
+set(OPENOCD_SCRIPT_ARGS "")
+if (OPENOCD_SCRIPTS)
+    list(APPEND OPENOCD_SCRIPT_ARGS -s ${OPENOCD_SCRIPTS})
+endif()
 
 add_custom_target(my_pico_app_probe
     COMMAND ${OPENOCD}
+            ${OPENOCD_SCRIPT_ARGS}
             -f interface/cmsis-dap.cfg
             -f target/rp2350.cfg
             -c "adapter speed 5000"
@@ -359,13 +373,16 @@ cmake --build build-pico2 --target my_pico_app_run
 cmake --build build-pico2 --target my_pico_app_probe
 ```
 
-如果 `openocd` 不在 `PATH` 中，重新配置时显式传入路径：
+如果 `openocd` 不在 `PATH` 中，重新配置时显式传入路径。使用官方插件环境时：
 
 ```sh
 cmake -S . -B build-pico2 \
     -DPICO_BOARD=pico2 \
-    -DOPENOCD=$HOME/embedded/openocd-install/bin/openocd
+    -DOPENOCD=$HOME/.pico-sdk/openocd/0.12.0+dev/openocd \
+    -DOPENOCD_SCRIPTS=$HOME/.pico-sdk/openocd/0.12.0+dev/scripts
 ```
+
+如果你是完全手动安装，则把 `OPENOCD` 改成自己的安装位置，例如 `~/embedded/openocd-install/bin/openocd`。
 
 ## 什么时候继续使用 pico-examples
 

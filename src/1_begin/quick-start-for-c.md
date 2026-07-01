@@ -4,7 +4,7 @@
 
 ## Pico 2 和 Pico 2 W 的差异
 
-还记得在[Pico 2 和 Pico 2 W 的差异](./1_begin/different_between_pico2_pico2W.md)中提及的吗？
+还记得在[Pico 2 和 Pico 2 W 的差异](./different_between_pico2_pico2W.md)中提及的吗？
 
 > [!NOTE]
 > Pico 2 和 Pico 2 W 都基于 RP2350，但它们的板载 LED 接法不同：
@@ -203,10 +203,12 @@ cp build-pico2w/pico2_manual_blink.uf2 /run/media/$USER/RP2350/
 
 如果你连接了 Debug Probe，就不需要按 `BOOTSEL`。目标板仍然需要通过 USB 或外部电源供电，并且 Debug Probe 的 `SWDIO`、`SWCLK`、`GND` 要和 Pico 正确连接。
 
-先完成前面对应板型的编译，下面使用 `openocd` 烧录生成的 ELF。Pico 2：
+先完成前面对应板型的编译，下面使用 OpenOCD 烧录生成的 ELF。如果你按 [C 环境](./c_setup.md) 复用了官方插件工具，可以直接使用 `PICO_OPENOCD` 和 `PICO_OPENOCD_SCRIPTS`。Pico 2：
 
 ```sh
-openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg \
+"$PICO_OPENOCD" -s "$PICO_OPENOCD_SCRIPTS" \
+    -f interface/cmsis-dap.cfg \
+    -f target/rp2350.cfg \
     -c "adapter speed 5000" \
     -c "program build-pico2/pico2_manual_blink.elf verify reset exit"
 ```
@@ -214,7 +216,9 @@ openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg \
 Pico 2 W：
 
 ```sh
-openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg \
+"$PICO_OPENOCD" -s "$PICO_OPENOCD_SCRIPTS" \
+    -f interface/cmsis-dap.cfg \
+    -f target/rp2350.cfg \
     -c "adapter speed 5000" \
     -c "program build-pico2w/pico2_manual_blink.elf verify reset exit"
 ```
@@ -285,9 +289,15 @@ No accessible RP-series devices in BOOTSEL mode were found.
 
 ```cmake
 set(OPENOCD openocd CACHE FILEPATH "Path to OpenOCD executable")
+set(OPENOCD_SCRIPTS "" CACHE PATH "Path to OpenOCD scripts")
+set(OPENOCD_SCRIPT_ARGS "")
+if (OPENOCD_SCRIPTS)
+    list(APPEND OPENOCD_SCRIPT_ARGS -s ${OPENOCD_SCRIPTS})
+endif()
 
 add_custom_target(pico2_manual_blink_probe
     COMMAND ${OPENOCD}
+            ${OPENOCD_SCRIPT_ARGS}
             -f interface/cmsis-dap.cfg
             -f target/rp2350.cfg
             -c "adapter speed 5000"
@@ -313,4 +323,13 @@ Pico 2 W：
 cmake --build build-pico2w --target pico2_manual_blink_probe
 ```
 
-这个目标会先构建 `pico2_manual_blink`，再把生成的 ELF 文件交给 `openocd` 烧录并运行。`OPENOCD` 默认使用 `PATH` 中的 `openocd`；如果你把 OpenOCD 安装在工作区目录，可以在配置时显式传入，例如 `-DOPENOCD=$HOME/embedded/openocd-install/bin/openocd`。
+这个目标会先构建 `pico2_manual_blink`，再把生成的 ELF 文件交给 OpenOCD 烧录并运行。`OPENOCD` 默认使用 `PATH` 中的 `openocd`；如果你使用官方插件安装的 OpenOCD，可以在配置时显式传入：
+
+```sh
+cmake -S . -B build-pico2 \
+    -DPICO_BOARD=pico2 \
+    -DOPENOCD=$HOME/.pico-sdk/openocd/0.12.0+dev/openocd \
+    -DOPENOCD_SCRIPTS=$HOME/.pico-sdk/openocd/0.12.0+dev/scripts
+```
+
+如果你走手动路线，则把 `OPENOCD` 和 `OPENOCD_SCRIPTS` 改成自己的安装位置。

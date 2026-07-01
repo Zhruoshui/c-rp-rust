@@ -1,11 +1,7 @@
 # 安装环境说明
 树莓派pico在 Windows、macOS 和 Linux 上提供统一的开发体验，本书就基于linux平台完成开发工作。
 
-> [!NOTE]
->如果你平时使用windows开发，你可以遵循这篇文章来配置环境：https://www.cnblogs.com/Koomee/p/19052241
-
 # Rust 环境搭建
-
 本章只覆盖 Rust 开发、烧录和调试需要的工具。C SDK、`arm-none-eabi-gcc`、`PICO_SDK_PATH` 等内容放在 [C SDK 环境](./c_setup.md) 中。
 
 对于本书的 Rust 示例，最常用的流程有两种：
@@ -13,101 +9,136 @@
 1. 使用 `picotool` 通过 BOOTSEL 模式烧录。
 2. 使用 `probe-rs` 通过 Debug Probe 烧录和调试。
 
-如果你暂时没有 Debug Probe，先配置 `picotool` 就足够完成大多数入门示例。
+由于使用 Rust 做 Pico 嵌入式开发的人目前仍然比 C/C++ 少，虽然 VS Code 的 Raspberry Pi Pico 插件可以直接新建 Rust 项目，但它生成的模板走的是 [rp-hal](https://github.com/rp-rs/rp-hal) 生态，而不是本书主讲的 [Embassy](https://github.com/embassy-rs/embassy) 生态，所以本书不直接沿用 Pico VS Code 插件生成的 Rust 模板，自己手动配置项目更有利于学习。
 
-# AI帮助环境安装：
-现在AI Agent开发时代，配置环境啥的也不用再折腾了，直接将我的文档链接发给AI agent即可（这也算是在linux上完成开发的一种优势吧，安装等都不依赖图形界面，非常适合ai自主完成）：
-> https://github.com/Zhruoshui/c-rp-rust/blob/main/src/agent_help/rp2350-environment-setup.md
+## 安装rust
 
-注意：不要开启agent的全自动，最好每步都需要人工审核，第一个是安全，第二个是及时纠正
+本书的 Rust 示例项目以 Embassy 为主线，示例工程位于：
 
-## Picotool
-
-`picotool` 是 Raspberry Pi 官方工具。它可以查看 UF2/ELF 的元数据，也可以在 Pico 2 处于 BOOTSEL 模式时把程序写入开发板。
-
-[Picotool 仓库](https://github.com/raspberrypi/picotool)
-
-> [!TIP]
-> 你也可以从 <a href="https://github.com/raspberrypi/pico-sdk-tools">pico-sdk-tools</a> 下载预编译二进制文件。预编译版本更简单；从源码构建的好处是可以和本地 Pico SDK 版本保持一致。
-
-### 安装构建依赖
-
-Debian / Ubuntu:
-
-```sh
-sudo apt install build-essential pkg-config libusb-1.0-0-dev cmake git
+```text
+/home/ruoshui/Documents/MyProject/raspberrypi/rp2350/pico-learn/pico2-quick
 ```
 
-Arch Linux:
+该项目使用 `embassy-rp` 和 `embassy-executor`，默认构建 Pico 2；如果要构建 Pico 2 W，需要启用 `pico2w` feature。安装环境时重点准备三类工具：
 
-```sh
-sudo pacman -S --needed base-devel pkgconf libusb cmake git
+1. Rust 主机工具链：`rustc`、`cargo`、`rustup`。
+2. RP2350 ARM 编译目标：`thumbv8m.main-none-eabihf`。
+3. 烧录/调试工具：BOOTSEL 路线使用 `picotool`，Debug Probe 路线使用 `probe-rs`、`cargo flash`、`cargo embed`。
+
+### 安装 Rust 工具链
+
+推荐使用 `rustup` 管理 Rust。Linux 下可以直接使用官方安装脚本：
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source "$HOME/.cargo/env"
 ```
 
-### 克隆 Pico SDK 和 picotool
+安装后使用稳定版工具链，并更新到当前版本：
 
-这里假设把工具放在 `~/embedded` 下，你可以换成自己的路径。
-
-> [!IMPORTANT]
-> *--注意，后续本书的文件路径等基本都放在这个路径下，如果你需要放在其他位置，请对应的做出修改*
-
-```sh
-mkdir -p ~/embedded
-cd ~/embedded
-
-git clone https://github.com/raspberrypi/pico-sdk
-git clone https://github.com/raspberrypi/picotool
-
-cd pico-sdk
-git submodule update --init
+```bash
+rustup default stable
+rustup update
+rustc --version
+cargo --version
 ```
 
-### 构建并安装 picotool
+本书主线使用 Pico 2 的 ARM Cortex-M33 内核，所以需要添加：
 
-`PICO_SDK_PATH` 必须指向你的 Pico SDK 路径。注意这里要使用 `export`，否则子进程中的 CMake 读不到这个变量。
-
-```sh
-export PICO_SDK_PATH="$HOME/embedded/pico-sdk"
-
-cd ~/embedded/picotool
-cmake -S . -B build -DPICO_SDK_PATH="$PICO_SDK_PATH"
-cmake --build build -j8
-sudo cmake --install build
+```bash
+rustup target add thumbv8m.main-none-eabihf
 ```
 
-安装完成后检查：
+如果后续要尝试 RP2350 的 RISC-V 内核，再额外添加：
 
-```sh
+```bash
+rustup target add riscv32imac-unknown-none-elf
+```
+
+检查目标是否已经安装：
+
+```bash
+rustup target list --installed | grep -E 'thumbv8m.main-none-eabihf|riscv32imac-unknown-none-elf'
+```
+
+### 安装烧录和调试工具
+
+如果使用 BOOTSEL 模式烧录，示例项目的 `.cargo/config.toml` 已经把 `cargo run` 配成调用：
+
+```text
+picotool load -u -v -x -t elf
+```
+
+因此先确认 `picotool` 可用：
+
+```bash
 picotool version
 ```
 
-> [!NOTE]
-> 只把 `picotool` 二进制放进 `PATH` 能让命令行找到它，但 Pico SDK 的 CMake 还可能找不到 `picotoolConfig.cmake`，然后尝试联网下载 picotool。执行 `sudo cmake --install build` 会同时安装二进制和 CMake package，这是更稳妥的方式。
+如果命令不存在，可以先按 C SDK 环境章节安装 `picotool`，或者使用 Raspberry Pi Pico VS Code 插件安装在 `~/.pico-sdk/picotool/` 下的预编译版本。
 
-### 配置 picotool 的 udev 规则
+如果使用 Raspberry Pi Debug Probe 调试或烧录，安装 `probe-rs` 工具链：
 
-Linux 默认可能不允许普通用户访问 BOOTSEL 模式下的 Pico。安装 udev 规则后，`cargo run` 使用 `picotool` 时就不需要 `sudo`。
+```bash
+curl -LsSf https://github.com/probe-rs/probe-rs/releases/latest/download/probe-rs-tools-installer.sh | sh
+source "$HOME/.cargo/env"
 
-```sh
-cd ~/embedded/picotool
-sudo install -m 0644 udev/60-picotool.rules /etc/udev/rules.d/60-picotool.rules
-sudo udevadm control --reload-rules
+probe-rs --version
+cargo flash --version
+cargo embed --version
 ```
 
-然后拔下并重新插入 Pico。烧录时需要按住 BOOTSEL 再插入 USB。
+Linux 下还需要配置 udev 规则，否则普通用户可能无法访问 BOOTSEL 设备或 Debug Probe。`picotool` 和 `probe-rs` 的 udev 配置分别见后续小节。
 
-如果规则文件中引用了 `plugdev`，但你的发行版没有这个组，可以创建它并把当前用户加入进去：
+### 验证示例项目
 
-```sh
-getent group plugdev || sudo groupadd -r plugdev
-sudo usermod -aG plugdev "$USER"
+进入本书使用的 Embassy 示例项目：
+
+```bash
+cd /home/ruoshui/Documents/MyProject/raspberrypi/rp2350/pico-learn/pico2-quick
 ```
 
-修改用户组后需要重新登录，或者重启系统，当前终端会话才一定能拿到新组权限。
+编译 Pico 2 默认版本：
+
+```bash
+cargo build-pico2
+```
+
+编译 Pico 2 W 版本：
+
+```bash
+cargo build-pico2w
+```
+
+如果 Pico 2 以 BOOTSEL 模式连接，可以用 `picotool` 路线运行：
+
+```bash
+cargo run-pico2
+```
+
+Pico 2 W 对应：
+
+```bash
+cargo run-pico2w
+```
+
+如果使用 Debug Probe，可以用 `probe-rs` 路线烧录或调试：
+
+```bash
+cargo flash-pico2
+cargo embed-pico2
+```
+
+Pico 2 W 对应：
+
+```bash
+cargo flash-pico2w
+cargo embed-pico2w
+```
 
 ## Rust 目标平台
 
-Pico 2 使用 RP2350 芯片。RP2350 同时包含 ARM Cortex-M33 和 Hazard3 RISC-V 内核。本书主要使用 ARM 目标：
+Pico 2 使用 RP2350 芯片。RP2350 同时包含 ARM Cortex-M33 和 Hazard3 RISC-V 内核。本书主要使用 ARM target：
 
 ```sh
 rustup target add thumbv8m.main-none-eabihf
@@ -207,18 +238,20 @@ cargo embed --chip RP2350 --release
 
 ## 验证环境
 
-可以用一个 Pico 2 Rust 示例验证环境：
+可以用一个 Pico 2 / Pico 2W 的 Rust 示例验证环境：
 
 ```sh
-git clone https://github.com/ImplFerris/pico2-quick
+git clone https://github.com/Zhruoshui/pico2-quick
 cd pico2-quick
 cargo build
 ```
 
-如果 Pico 2 已经以 BOOTSEL 模式连接：
+如果 Pico 2 / Pico 2W 已经以 BOOTSEL 模式连接：
 
 ```sh
-cargo run
+cargo run --release #　for Pico 2
+cargo run --release --no-default-features --features pico2w # for Pico 2W
+
 ```
 
 也可以单独检查 `picotool` 是否能访问 USB：
